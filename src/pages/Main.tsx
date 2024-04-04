@@ -13,7 +13,7 @@ const Main = () => {
           href="https://reactrouter.com"
           target="_blank"
         >
-          React Router
+          React Route
         </a>
         ,{" "}
         <a

@@ -3,7 +3,7 @@ import { cloneElement } from "react";
 import { useLocation, useRoutes } from "react-router-dom";
 import Main from "./pages/Main";
 import { Example1, Example1To } from "./pages/Example1";
-import Example2 from "./pages/Example2";
+import { Example2, Example2To } from "./pages/Example2";
 
 const App = () => {
   const element = useRoutes([
@@ -15,7 +15,13 @@ const App = () => {
         { path: "to", element: <Example1To /> },
       ],
     },
-    { path: "/2", element: <Example2 /> },
+    {
+      path: "/2",
+      children: [
+        { index: true, element: <Example2 /> },
+        { path: "to", element: <Example2To /> },
+      ],
+    },
   ]);
 
   const location = useLocation();
