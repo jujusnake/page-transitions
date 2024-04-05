@@ -4,6 +4,7 @@ import { useLocation, useRoutes } from "react-router-dom";
 import Main from "./pages/Main";
 import { Example1, Example1To } from "./pages/Example1";
 import { Example2, Example2To } from "./pages/Example2";
+import { Example3, Example3To } from "./pages/Example3";
 
 const App = () => {
   const element = useRoutes([
@@ -20,6 +21,13 @@ const App = () => {
       children: [
         { index: true, element: <Example2 /> },
         { path: "to", element: <Example2To /> },
+      ],
+    },
+    {
+      path: "/3",
+      children: [
+        { index: true, element: <Example3 /> },
+        { path: "to", element: <Example3To /> },
       ],
     },
   ]);

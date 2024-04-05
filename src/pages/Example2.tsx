@@ -17,7 +17,7 @@ const Example2 = () => {
   return (
     <main className="flex flex-col items-center justify-center p-5 min-h-dvh">
       <h1 className="mb-4 text-3xl font-semibold">Example 2</h1>
-      <p className="mb-6 text-lg font-medium">Double wipe from right to left</p>
+      <p className="mb-6 text-lg font-medium">Double wipe from right to left with logo and a loader</p>
       <Link
         to="to"
         className="px-5 py-2 text-sm font-medium text-white transition-colors bg-pink-600 rounded-full shadow-md shadow-pink-700/50 hover:bg-pink-700"
@@ -33,7 +33,7 @@ const Example2 = () => {
           transition: { type: "tween", duration: isDisabled ? 0 : 0.5, ease: "circIn", delay: isDisabled ? 0 : 0.8 },
         }}
         exit={{ x: 0, transition: { type: "tween", duration: isDisabled ? 0 : 0.5, ease: "circIn" } }}
-        className="fixed top-0 bottom-0 left-0 right-0 z-10 bg-blue-500"
+        className="fixed top-0 bottom-0 left-0 right-0 z-10 bg-pink-500"
       />
 
       <div className="fixed z-20 -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
@@ -141,7 +141,7 @@ const Example2To = () => {
         initial={{ x: 0 }}
         animate={{ x: "-100%", transition: { type: "tween", duration: 0.5, ease: "circIn", delay: 0.4 } }}
         exit={{ x: 0, transition: { type: "tween", duration: 0.5, ease: "circIn" } }}
-        className="fixed top-0 bottom-0 left-0 right-0 z-10 bg-blue-500"
+        className="fixed top-0 bottom-0 left-0 right-0 z-10 bg-pink-500"
       />
       <motion.div
         ref={scope}

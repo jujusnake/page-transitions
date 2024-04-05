@@ -40,7 +40,7 @@ const Example1 = () => {
         key="example1-from-privacy-screen"
         style={{ originX: isPresent ? 0 : 1 }}
         {...motionVariable}
-        className="fixed top-0 bottom-0 left-0 right-0 z-50 bg-blue-500 privacy-screen"
+        className="fixed top-0 bottom-0 left-0 right-0 z-50 bg-teal-500 privacy-screen"
       />
     </main>
   );
@@ -65,7 +65,7 @@ const Example1To = () => {
         key="example1-to-privacy-screen"
         style={{ originX: isPresent ? 0 : 1 }}
         {...motionVariable}
-        className="fixed top-0 bottom-0 left-0 right-0 z-50 bg-blue-500"
+        className="fixed top-0 bottom-0 left-0 right-0 z-50 bg-teal-500"
       />
     </main>
   );

@@ -40,6 +40,13 @@ const Main = () => {
         >
           Example 2
         </Link>
+        <Link
+          to="/3"
+          className="px-5 py-2 text-sm font-medium text-white transition-colors bg-yellow-300 rounded-full shadow-md shadow-yellow-400/50 hover:bg-yellow-400"
+          state={{ from: "Main" }}
+        >
+          Example 3
+        </Link>
       </div>
     </motion.main>
   );
