@@ -12,7 +12,7 @@ const Example2 = () => {
     }
   }, []);
 
-  const isDisabled = useMemo(() => pathname === "/" || state?.from === "Main", [pathname, state?.from]);
+  const isDisabled = useMemo(() => state?.from === "Main", [state?.from]);
 
   return (
     <main className="flex flex-col items-center justify-center p-5 min-h-dvh">
@@ -25,63 +25,56 @@ const Example2 = () => {
         GO
       </Link>
 
-      <motion.div
-        key="example2-from"
-        initial={{ x: 0 }}
-        animate={{
-          x: "100%",
-          transition: { type: "tween", duration: isDisabled ? 0 : 0.5, ease: "circIn", delay: isDisabled ? 0 : 0.8 },
-        }}
-        exit={{ x: 0, transition: { type: "tween", duration: isDisabled ? 0 : 0.5, ease: "circIn" } }}
-        className="fixed top-0 bottom-0 left-0 right-0 z-10 bg-pink-500"
-      />
+      {pathname !== "/" && (
+        <>
+          <motion.div
+            key="example2-from"
+            initial={{ x: 0 }}
+            animate={{
+              x: "100%",
+              transition: {
+                type: "tween",
+                duration: isDisabled ? 0 : 0.5,
+                ease: "circIn",
+                delay: isDisabled ? 0 : 0.8,
+              },
+            }}
+            exit={{ x: 0, transition: { type: "tween", duration: isDisabled ? 0 : 0.5, ease: "circIn" } }}
+            className="fixed top-0 bottom-0 left-0 right-0 z-10 bg-pink-500"
+          />
 
-      <div className="fixed z-20 -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
-        <div className="flex overflow-hidden text-3xl font-semibold text-white">
-          {["L", "O", "G", "O"].map((letter, index) => (
-            <motion.div
-              key={`example2-logo-child-${index + 1}`}
-              initial={{ y: 0 }}
-              animate={{
-                y: "-100%",
-                transition: {
-                  type: "tween",
-                  ease: "circIn",
-                  duration: isDisabled ? 0 : 0.3,
-                  delay: isDisabled ? 0 : 0.1 * index,
-                },
-              }}
-              exit={{
-                y: 0,
-                transition: {
-                  type: "tween",
-                  ease: "circOut",
-                  duration: isDisabled ? 0 : 0.3,
-                  delay: isDisabled ? 0 : 0.5 + 0.1 * index,
-                },
-              }}
-            >
-              {letter}
-            </motion.div>
-          ))}
-        </div>
-      </div>
-
-      {/* <div className="fixed z-20 flex items-center justify-center -translate-x-1/2 -translate-y-1/2 pointer-events-none top-1/2 left-1/2">
-        <motion.div
-          key="example2-text"
-          variants={logoMotion}
-          initial="initial"
-          animate="animate"
-          exit="exit"
-          className="flex text-3xl font-semibold text-center text-white"
-        >
-          <motion.div>L</motion.div>
-          <motion.div>O</motion.div>
-          <motion.div>G</motion.div>
-          <motion.div>O</motion.div>
-        </motion.div>
-      </div> */}
+          <div className="fixed z-20 -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
+            <div className="flex overflow-hidden text-3xl font-semibold text-white">
+              {["L", "O", "G", "O"].map((letter, index) => (
+                <motion.div
+                  key={`example2-logo-child-${index + 1}`}
+                  initial={{ y: 0 }}
+                  animate={{
+                    y: "-100%",
+                    transition: {
+                      type: "tween",
+                      ease: "circIn",
+                      duration: isDisabled ? 0 : 0.3,
+                      delay: isDisabled ? 0 : 0.1 * index,
+                    },
+                  }}
+                  exit={{
+                    y: 0,
+                    transition: {
+                      type: "tween",
+                      ease: "circOut",
+                      duration: isDisabled ? 0 : 0.3,
+                      delay: isDisabled ? 0 : 0.5 + 0.1 * index,
+                    },
+                  }}
+                >
+                  {letter}
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </>
+      )}
     </main>
   );
 };
@@ -105,7 +98,7 @@ const Example2To = () => {
 
   return (
     <main className="flex flex-col items-center justify-center p-5 min-h-dvh">
-      Viewer ✨
+      IV Viewer ✨
       <div className="fixed z-20 -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
         <div className="flex overflow-hidden text-3xl font-semibold text-white">
           {["L", "O", "G", "O"].map((letter, index) => (
