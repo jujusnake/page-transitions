@@ -15,7 +15,7 @@ const Card = ({ imgSrc, onClick, selected, style, exitWithoutFrame }: Props) => 
   const containerRef = useRef<HTMLDivElement>(null);
 
   const [offsetToCenter, setOffset] = useState({ x: 0, y: 0 });
-  const [aspectRatio, setAspectRatio] = useState("1 / 1");
+  const [aspectRatio, setAspectRatio] = useState(0.833);
   const [scale, setScale] = useState(1);
 
   const setOffsetToCenter = () => {
@@ -30,7 +30,7 @@ const Card = ({ imgSrc, onClick, selected, style, exitWithoutFrame }: Props) => 
   };
 
   const setCurrentViewportAspectRatio = () => {
-    const aspectRatio = `${window.innerWidth} / ${window.innerHeight}`;
+    const aspectRatio = window.innerWidth / window.innerHeight;
     setAspectRatio(aspectRatio);
   };
 
@@ -51,10 +51,10 @@ const Card = ({ imgSrc, onClick, selected, style, exitWithoutFrame }: Props) => 
   }, []);
 
   return (
-    <motion.div className="flex-1 flex-shrink-0 bg-red-200" ref={containerRef} style={{ ...style }}>
+    <motion.div className="flex-1 flex-shrink-0" ref={containerRef} style={{ ...style }}>
       <motion.button
         type="button"
-        className="w-full bg-white aspect-[10/12] relative flex overflow-hidden isolate shadow-xl shadow-black/30"
+        className="relative flex w-full overflow-hidden bg-white shadow-xl aspect-[0.877] isolate shadow-black/30"
         exit={
           selected
             ? {
