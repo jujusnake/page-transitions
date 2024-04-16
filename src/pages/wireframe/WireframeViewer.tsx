@@ -1,3 +1,4 @@
+import { Viewer1Loader } from "../../components/loaders";
 import useBackground from "../../lib/useBackground";
 
 type Props = { cardNum: number };
@@ -8,6 +9,7 @@ const WireframeViewer = ({ cardNum = 1 }: Props) => {
 
   return (
     <div className="flex items-center justify-center h-screen p-10 text-3xl font-bold text-white">
+      <Viewer1Loader />
       이제 뷰어를 보여줄 페이지로 이동했습니다. <br />
       그러면 이제 각 뷰어에 맞는 로딩 화면을 보여주다가 로딩이 다되면 뷰어 보여주면 됩니다.
       <br />

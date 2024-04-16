@@ -1,18 +1,27 @@
 import useBackground from "../../lib/useBackground";
 import Card from "../../components/Card";
 import { useNavigate } from "react-router-dom";
-import { useRef, useState } from "react";
-import { useMotionValueEvent, useScroll, useTransform } from "framer-motion";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useScroll, useTransform } from "framer-motion";
 import { motion } from "framer-motion";
 
 const WireframeMain = () => {
   useBackground("#373737");
   const navigate = useNavigate();
 
+  // refs
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-  const [isPrinted, setIsPrinted] = useState<boolean>(false);
-  const [selectedCard, setSelectedCard] = useState<number>(0);
+  // States
+  /**
+   * stage 0 : Scroll action
+   * stage 1 : container to y=0
+   * stage 2 : cards spread
+   * stage 3 : cards clickable
+   * stage 4 : card clicked and exit page
+   */
+  const [transitionStage, setTransitionStage] = useState<number>(0);
+  const zInverted = useMemo(() => transitionStage === 4, [transitionStage]);
 
   // Scroll Actions
   const { scrollYProgress } = useScroll({ target: scrollContainerRef, offset: ["start 0.8", "center 0.6"] });
@@ -20,22 +29,32 @@ const WireframeMain = () => {
   const card1y = useTransform(scrollYProgress, [0, 1], ["-2dvh", "-8dvh"]);
   const card3y = useTransform(scrollYProgress, [0, 1], ["2dvh", "10dvh"]);
 
-  useMotionValueEvent(scrollYProgress, "change", (latest) => {
+  // Event Handler
+  const handleEndScroll = (latest: number) => {
     if (latest === 1) {
-      setIsPrinted(true);
-      scrollYProgress.clearListeners();
+      scrollYProgress.destroy();
       y.destroy();
       card1y.destroy();
       card3y.destroy();
+      setTransitionStage((prev) => (prev < 1 ? 1 : prev));
     }
-  });
+  };
 
-  // Event Handler
   const handleClickCard = (cardNum: number) => {
-    if (isPrinted === false) return;
-    setSelectedCard((prev) => (prev === cardNum ? 0 : cardNum));
+    document.documentElement.style.overflow = "hidden";
+    setTransitionStage(4);
     navigate(`card/${cardNum}`);
   };
+
+  // Life Cycle
+  useEffect(() => {
+    const unsubScroll = scrollYProgress.on("change", handleEndScroll);
+
+    return () => {
+      unsubScroll();
+      document.documentElement.style.overflow = "auto";
+    };
+  }, []);
 
   return (
     <main className="flex flex-col overflow-hidden text-white">
@@ -50,11 +69,11 @@ const WireframeMain = () => {
       </div>
 
       <div
-        className={`${isPrinted === true ? "z-[99999]" : "z-0"} h-dvh flex flex-col items-center relative`}
+        className={`${zInverted ? "z-[99999]" : "z-0"} h-dvh flex flex-col items-center relative`}
         ref={scrollContainerRef}
       >
         {/* Printer */}
-        <div className={`flex flex-col items-center h-[20%] ${isPrinted === true ? "z-10" : "z-[100]"}`}>
+        <div className={`flex flex-col items-center h-[20%] ${zInverted ? "z-10" : "z-[100]"}`}>
           <div className="bg-[#373737] w-screen flex-grow"></div>
           <div className="bg-[#373737] w-screen flex justify-center h-16">
             <div className="w-[50vw] h-full  bg-red-500"></div>
@@ -62,43 +81,54 @@ const WireframeMain = () => {
         </div>
 
         {/* Cards */}
-        <motion.div className={`flex-grow w-full  ${isPrinted === true ? "z-[100]" : "z-0"}`}>
+        <motion.div className={`flex-grow w-full  ${zInverted ? "z-[100]" : "z-0"}`}>
           <motion.div
             className="flex items-center justify-center w-full h-full gap-6 px-6 pb-[20dvh]"
-            style={{ y: isPrinted ? 0 : y, transition: isPrinted ? "all 0.3s ease-in-out" : "none" }}
+            style={{
+              y: transitionStage > 0 ? 0 : y,
+              transition: transitionStage === 1 ? "all 0.3s ease-in-out" : "none",
+            }}
+            id="card-container"
+            onTransitionEnd={() => setTransitionStage(2)}
           >
             <Card
               title="Card 1"
               imgSrc="/card_1.png"
               onClick={() => handleClickCard(1)}
-              selected={selectedCard === 1}
               style={{
-                x: isPrinted ? 0 : "25vw",
-                y: isPrinted ? 0 : card1y,
-                transition: isPrinted ? "all 0.3s ease-in-out" : "none",
+                x: transitionStage > 1 ? 0 : "25vw",
+                y: transitionStage > 1 ? 0 : card1y,
+                transition: transitionStage === 2 ? "all 0.3s ease-in-out" : "none",
+                pointerEvents: transitionStage > 2 && zInverted === false ? "auto" : "none",
+              }}
+              onTransitionEnd={(e) => {
+                e.stopPropagation();
+                setTransitionStage(3);
               }}
             />
             <Card
               title="Card 2"
               imgSrc="/card_2.png"
               onClick={() => handleClickCard(2)}
-              selected={selectedCard === 2}
               style={{
-                x: isPrinted ? 0 : "5vw",
-                transition: isPrinted ? "all 0.3s ease-in-out" : "none",
+                x: transitionStage > 1 ? 0 : "5vw",
+                transition: transitionStage === 2 ? "all 0.3s ease-in-out" : "none",
+                pointerEvents: transitionStage > 2 && zInverted === false ? "auto" : "none",
               }}
+              onTransitionEnd={(e) => e.stopPropagation()}
               exitWithoutFrame
             />
             <Card
               title="Card 3"
               imgSrc="/card_3.png"
               onClick={() => handleClickCard(3)}
-              selected={selectedCard === 3}
               style={{
-                x: isPrinted ? 0 : "-35vw",
-                y: isPrinted ? 0 : card3y,
-                transition: isPrinted ? "all 0.3s ease-in-out" : "none",
+                x: transitionStage > 1 ? 0 : "-35vw",
+                y: transitionStage > 1 ? 0 : card3y,
+                transition: transitionStage === 2 ? "all 0.3s ease-in-out" : "none",
+                pointerEvents: transitionStage > 2 && zInverted === false ? "auto" : "none",
               }}
+              onTransitionEnd={(e) => e.stopPropagation()}
               exitWithoutFrame
             />
           </motion.div>

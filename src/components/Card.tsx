@@ -1,4 +1,4 @@
-import { MotionStyle, motion } from "framer-motion";
+import { HTMLMotionProps, MotionStyle, motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 
 type Props = {
@@ -6,14 +6,14 @@ type Props = {
   imgSrc?: string;
   onClick?: () => void;
   childClassName?: string;
-  selected?: boolean;
   style?: MotionStyle;
   exitWithoutFrame?: boolean;
-};
+} & HTMLMotionProps<"div">;
 
-const Card = ({ imgSrc, onClick, selected, style, exitWithoutFrame }: Props) => {
+const Card = ({ imgSrc, onClick, exitWithoutFrame, ...props }: Props) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
+  const [selected, setSelected] = useState(false);
   const [offsetToCenter, setOffset] = useState({ x: 0, y: 0 });
   const [aspectRatio, setAspectRatio] = useState(0.833);
   const [scale, setScale] = useState(1);
@@ -22,7 +22,7 @@ const Card = ({ imgSrc, onClick, selected, style, exitWithoutFrame }: Props) => 
     if (containerRef.current) {
       const { left, width, height, top } = containerRef.current.getBoundingClientRect();
       const originLeft = left + width / 2;
-      const centerLeft = document.documentElement.clientWidth / 2;
+      const centerLeft = window.innerWidth / 2;
       const centerTop = document.documentElement.clientHeight / 2 - height / 2 - top;
 
       setOffset({ x: centerLeft - originLeft, y: centerTop });
@@ -51,7 +51,7 @@ const Card = ({ imgSrc, onClick, selected, style, exitWithoutFrame }: Props) => 
   }, []);
 
   return (
-    <motion.div className="flex-1 flex-shrink-0" ref={containerRef} style={{ ...style }}>
+    <motion.div {...props} className="flex-1 flex-shrink-0" ref={containerRef}>
       <motion.button
         type="button"
         className="relative flex w-full overflow-hidden bg-white shadow-xl aspect-[0.877] isolate shadow-black/30"
@@ -72,6 +72,7 @@ const Card = ({ imgSrc, onClick, selected, style, exitWithoutFrame }: Props) => 
           willChange: "transform, visibility, z-index",
         }}
         onClick={() => {
+          setSelected(true);
           setOffsetToCenter();
           setCurrentViewportAspectRatio();
           setCurrentViewportScale();
@@ -80,21 +81,18 @@ const Card = ({ imgSrc, onClick, selected, style, exitWithoutFrame }: Props) => 
       >
         {imgSrc && (
           <motion.div
-            className="absolute z-0 left-10 bottom-10 top-10 right-10"
+            className="absolute top-0 left-0 z-0 w-full h-full transition-transform scale-75"
             exit={
               selected && exitWithoutFrame
                 ? {
-                    left: 0,
-                    bottom: 0,
-                    top: 0,
-                    right: 0,
-                    transition: { duration: 0.1, type: "spring", bounce: 0 },
+                    scale: 1,
+                    transition: { duration: 0.2, type: "spring", bounce: 0 },
                   }
                 : {}
             }
           >
             <motion.img
-              exit={{ opacity: 0.99, transition: { duration: 0.3, delay: 1 } }}
+              exit={selected ? { opacity: 0.99, transition: { duration: 0.3, delay: 1 } } : {}}
               src={imgSrc}
               className="object-cover w-full h-full"
             />
