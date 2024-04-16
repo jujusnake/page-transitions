@@ -49,6 +49,7 @@ const WireframeMain = () => {
   // Life Cycle
   useEffect(() => {
     const unsubScroll = scrollYProgress.on("change", handleEndScroll);
+    handleEndScroll(scrollYProgress.get());
 
     return () => {
       unsubScroll();
