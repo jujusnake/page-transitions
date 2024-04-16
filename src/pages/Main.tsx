@@ -47,6 +47,12 @@ const Main = () => {
         >
           Example 3
         </Link>
+        <Link
+          to="/wireframe"
+          className="px-5 py-2 text-sm font-medium text-white transition-colors rounded-full shadow-md bg-slate-500 shadow-slate-600/50 hover:bg-slate-600"
+        >
+          Wireframe
+        </Link>
       </div>
     </motion.main>
   );
